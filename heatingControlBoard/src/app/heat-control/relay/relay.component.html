@@ -1,0 +1,7 @@
+<h1>{{ relay.name }}</h1>
+<div id="heating" color="accent" *ngIf="relay.heating">
+  Ein
+</div>
+<div id="notheating" *ngIf="!relay.heating">
+  Aus
+</div>

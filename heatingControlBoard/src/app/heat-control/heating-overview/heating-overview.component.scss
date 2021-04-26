@@ -1,0 +1,96 @@
+@import "../../../styles.scss";
+
+app-sensor,
+app-relay,
+.app-vorlauf {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.monitor-board{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+}
+
+.monitor-unit
+{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
+
+.control-unit {
+  border: 1px solid grey;
+  border-radius: 0.2rem;
+  padding: 0.5rem;
+  margin: 1rem;
+  // box-shadow: 0.1rem 0.1rem grey;
+  color: black;
+}
+
+.config-wrapper{
+  width: 50%;
+  background-color: white;
+  justify-content: center;
+  display: block;
+  flex-grow: 2;
+}
+.config-wraper > mat-form-field >input{
+  width:min-content;
+  background-color: red;
+}
+
+
+.background-cold{   
+  background-color: white;//mat-color($cold);
+}
+
+.background-warm{
+  background-color: white;//($warm,darker)
+}
+
+#statsGraph{
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  padding: 2rem;
+  min-height: 10%;
+}
+
+#dateRangePickerFormField{
+  
+}
+
+#TimeControlForm{
+  border:1px solid gray;
+  padding: 1rem;
+  border-radius: 1rem;
+}
+
+#TimeControlForm > mat-form-field{
+  margin: 0.5rem;
+  display: block;
+}
+
+#TimeControlForm > button{
+  width: 100%;
+  // background-color: mat-color($primary);
+}
+
+#editTimeControlIcon{
+  float: right;
+  box-shadow: 3px solid gray;
+  border-radius: 10rem;
+  z-index: 2;
+}
+
+#chartWrapper{
+  width: 100%;
+  height: 20rem;
+  margin-bottom: 10rem;
+}
+
+

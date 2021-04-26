@@ -1,0 +1,19 @@
+<h2 mat-dialog-title>Registrieren</h2>
+<mat-dialog-content
+  ><form [formGroup]="register_form">
+    <mat-form-field>
+        <mat-label>username</mat-label>
+        <input matInput type="text" placeholder="username" formControlName="username" >
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>password</mat-label>
+        <input matInput type="password" placeholder="password" formControlName="password">
+    </mat-form-field>
+   
+</form>
+<mat-error *ngIf="this.register_form.hasError('unauthorized')">Falscher Benutzername oder Passwort</mat-error>
+</mat-dialog-content
+>
+<mat-dialog-actions>
+  <button mat-flat-button type="submit" color="primary" mat-button (click)="register()">Ok</button>
+</mat-dialog-actions>

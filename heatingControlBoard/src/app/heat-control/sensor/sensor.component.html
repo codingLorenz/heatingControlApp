@@ -1,0 +1,40 @@
+<!-- <div class="container">
+  <h3>Temperatur</h3>
+  <h5>
+    Aktuell: {{ sensor.temperature }}/Richtwert: {{ sensor.idealTemperature }}
+  </h5>
+  
+  <mat-slider
+    [max]="sensor.idealTemperature + sensor.tolerance"
+    [min]="sensor.idealTemperature - sensor.tolerance"
+    step="0.5"
+    [value]="sensor.temperature"
+  ></mat-slider>
+  [angleSpan]="180"
+      [startAngle]="-90"
+      [smallSegments]="2"
+      [bigSegments]="8"
+      [axisTickFormatting]="axisTickFormatting "
+</div> -->
+<h1> {{ this.sensor.name }}</h1>
+<h1>{{this.sensor.temperature | number : '.1-1'}} °C</h1>
+
+<!-- <div>  
+  <ngx-charts-linear-gauge
+    [value]="this.sensor.temperature | number : '.1-1'"
+    [units]="('/')+this.sensor.idealTemperature"
+    [previousValue]="this.sensor.idealTemperature | number : '.1-1'"
+    [max]="40"
+    [valueFormatting]="valueFormatting"
+    [customColors]=""
+  ></ngx-charts-linear-gauge>
+</div>
+<h2 mat-heading>{{this.sensor.idealTemperature}}</h2>
+<mat-slider
+  [max]="40"
+  [min]="0"
+  [thumbLabel]="true"
+  step="0.5"
+  [(ngModel)]="sensor.idealTemperature"
+  (change)="idealTemperatureChanged()"
+></mat-slider> -->

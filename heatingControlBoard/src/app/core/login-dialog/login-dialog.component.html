@@ -1,0 +1,50 @@
+<div class="login-flex">
+  <h2 mat-dialog-title>Login</h2>
+  <mat-dialog-content
+    ><form [formGroup]="login_form">
+      <mat-form-field>
+        <mat-label>username</mat-label>
+        <input
+          matInput
+          type="text"
+          placeholder="username"
+          formControlName="username"
+        />
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>password</mat-label>
+        <input
+          matInput
+          type="password"
+          placeholder="password"
+          formControlName="password"
+        />
+      </mat-form-field>
+    </form>
+    <mat-error
+      *ngIf="this.login_form?.invalid && this.form_httpError !== undefined"
+      >{{ this.form_httpError?.message }}<br />{{
+        this.form_httpError.error
+      }}</mat-error
+    >
+    <mat-error *ngIf="this.login_form.hasError('unauthorized')"
+      >Falscher Benutzername oder Passwort</mat-error
+      >
+    <mat-error *ngIf="this.login_form.hasError('unknown')"
+      >Unbekannter Fehler, möglicherweise keine Verbindung zum Server.</mat-error
+      >
+      
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <!-- <button mat-flat-button type="submit" color="accent" mat-button (click)="register()">Registrieren</button> -->
+    <button
+      mat-button
+      mat-raised-button
+      type="submit"
+      color="primary"
+      (click)="login()"
+    >
+      Einloggen
+    </button>
+  </mat-dialog-actions>
+</div>

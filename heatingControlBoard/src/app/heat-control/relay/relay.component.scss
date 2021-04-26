@@ -1,0 +1,19 @@
+@import "../../../styles.scss";
+
+#notheating{
+    background-color: lightgrey;
+    color: white;
+}
+
+#heating{
+    background-color: mat-color($accent);
+    color:white;
+}
+
+div{
+    padding:0.5rem;
+    border-radius:0.5rem;
+    width: 80%;
+    text-align: center;
+    background-color: orange;
+}

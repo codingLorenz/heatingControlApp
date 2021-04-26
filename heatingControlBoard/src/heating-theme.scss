@@ -1,0 +1,22 @@
+@import "../node_modules/@angular/material/theming";
+
+@include mat-core();
+
+$primary: mat-palette($mat-red);
+$accent: mat-palette($mat-orange,A200,A100,A300);
+$warm: mat-palette($mat-red);
+$cold: mat-palette($mat-blue);
+// $warm: mat-palette($mat-red);
+// $cold:mat-palette($mat-blue, A200, A100, A400);
+$warn: mat-palette($mat-red);
+
+$heating-theme: mat-light-theme(
+  (
+    color: (
+      primary: $primary,
+      accent:$accent,
+      warn:$warn
+    ),
+  )
+);
+@include angular-material-theme($heating-theme);
