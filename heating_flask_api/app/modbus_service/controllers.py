@@ -120,7 +120,7 @@ def get_Sensor_Stats_In_Date_Range():
 @token_required
 def get_Heating_Config():
 	try:	
-		heatingConfig = HeatingControlConfig.objects().first().to_json()
+		heatingConfig = HeatingControlConfig.objects().exclude('id').first().to_json()
 		return make_response(heatingConfig,200)
 	except BaseException as baseException:
 		return make_response(baseException,400)
@@ -130,12 +130,11 @@ def get_Heating_Config():
 def write_Heating_Config():
 	try:
 		newHeatingConfig = HeatingControlConfig(**request.json)
-		# heatingConfig.update(REGULATION_DURATION_SECONDS=newHeatingConfig.REGULATION_DURATION_SECONDS,REGULATION_INTERVALL_SECONDS=newHeatingConfig.REGULATION_INTERVALL_SECONDS,REGULATION_TEMPERATURE_TOLERANCE=newHeatingConfig.REGULATION_TEMPERATURE_TOLERANCE)
 		heatingConfig.REGULATION_DURATION_SECONDS=newHeatingConfig.REGULATION_DURATION_SECONDS
 		heatingConfig.REGULATION_INTERVALL_SECONDS=newHeatingConfig.REGULATION_INTERVALL_SECONDS
 		heatingConfig.REGULATION_TEMPERATURE_TOLERANCE=newHeatingConfig.REGULATION_TEMPERATURE_TOLERANCE
-		# heatingConfig.update()
 		heatingConfig.save()
-		return make_response('OK',200)
+		return make_response(jsonify('OK'),200)
 	except BaseException as bE:
+		logging.error(bE)
 		return make_response(bE,400)

@@ -87,7 +87,7 @@
         formControlName="REGULATION_TEMPERATURE_TOLERANCE"
       />
     </mat-form-field>
-    <button color="primary" mat-raised-button type="submit">Speichern</button>
+    <button color="primary" [disabled]="this.heatingConfigFormGroup.disabled" mat-raised-button type="submit">Speichern</button>
     <mat-error *ngIf="this.heatingConfigForm_httpError">{{
       this.heatingConfigForm_httpError.message
     }}</mat-error>

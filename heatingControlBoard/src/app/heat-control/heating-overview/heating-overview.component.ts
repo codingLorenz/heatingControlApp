@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import {
   DateRange,
@@ -9,6 +9,7 @@ import { Relay } from '../shared/relay.model';
 import { Sensor } from '../shared/sensor.model';
 import { HeatingConfig } from '../shared/heatingConfig.model';
 import { HttpErrorResponse } from '@angular/common/http';
+import { MatButton } from '@angular/material/button';
 
 @Component({
   selector: 'app-heating-overview',
@@ -21,15 +22,14 @@ export class HeatingOverviewComponent implements OnInit {
   // dimensions: [number, number] = [500, 500];
   all_sensor_stats: any[] = null;
   view_sensor_stats: any[] = null;
-  graphOptions: string[] = ['Gesamt', 'Monat', 'Tag', 'Benutzerdefiniert'];
   active_sensor_data: any[] = null;
-  heatingConfigForm_httpError: HttpErrorResponse;
   dateRangeOptions = ['Heute', 'Woche', 'Monat', 'Jahr'];
 
+   heatingConfigForm_httpError: HttpErrorResponse;
   heatingConfigFormGroup = new FormGroup({
-    REGULATION_DURATION_SECONDS: new FormControl(1),
-    REGULATION_INTERVALL_SECONDS: new FormControl(1),
-    REGULATION_TEMPERATURE_TOLERANCE: new FormControl(1),
+    REGULATION_DURATION_SECONDS: new FormControl(),
+    REGULATION_INTERVALL_SECONDS: new FormControl(),
+    REGULATION_TEMPERATURE_TOLERANCE: new FormControl(),
   });
 
   dateRange = new FormGroup({
@@ -46,9 +46,9 @@ export class HeatingOverviewComponent implements OnInit {
     this.initDevices();
   }
   initHeatingConfig() {
-    this.heatControlService
-      .getHeatingConfig()
-      .subscribe((config) => console.log(config));
+    this.heatControlService.getHeatingConfig().subscribe((config) => {
+      this.heatingConfigFormGroup.setValue(config);
+    });
   }
 
   initDevices() {
@@ -158,26 +158,34 @@ export class HeatingOverviewComponent implements OnInit {
       : this.heatingConfigFormGroup.disable();
   }
 
-  statsDateRangeClicked(dateRangeOption:string) {
-    console.log(dateRangeOption)
+  statsDateRangeClicked(dateRangeOption: string) {
+    console.log(dateRangeOption);
     const endPointDateRange = new Date();
     let startPointDateRange = null;
     switch (dateRangeOption) {
       case 'Heute':
-        startPointDateRange = endPointDateRange
+        startPointDateRange = endPointDateRange;
         break;
       case 'Woche':
-        startPointDateRange = endPointDateRange.setDate(endPointDateRange.getDate()-endPointDateRange.getDay()) //substracts the days passed in the current week
+        startPointDateRange = endPointDateRange.setDate(
+          endPointDateRange.getDate() - endPointDateRange.getDay()
+        ); //substracts the days passed in the current week
         break;
       case 'Monat':
-        startPointDateRange = endPointDateRange.setDate(endPointDateRange.getDate()-endPointDateRange.getDate()) //sets to first of the current month
+        startPointDateRange = endPointDateRange.setDate(
+          endPointDateRange.getDate() - endPointDateRange.getDate()
+        ); //sets to first of the current month
         break;
       case 'Jahr':
-        startPointDateRange = endPointDateRange.setFullYear(endPointDateRange.getFullYear(),1,1) //sets startPointDateRange to first of January, current year
+        startPointDateRange = endPointDateRange.setFullYear(
+          endPointDateRange.getFullYear(),
+          1,
+          1
+        ); //sets startPointDateRange to first of January, current year
         break;
 
       default:
-        startPointDateRange = endPointDateRange
+        startPointDateRange = endPointDateRange;
         break;
     }
     // this.heatControlService.getSensorStatsInDateRange()

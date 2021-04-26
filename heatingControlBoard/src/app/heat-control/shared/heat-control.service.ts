@@ -24,7 +24,7 @@ export class HeatControlService {
   constructor(private http: HttpClient) {}
 
 writeHeatingConfig(config:HeatingConfig) {
-   return this.http.post(this.baseUrl+'write_Heating_Config',config,this.httpOptions)
+   return this.http.post(this.baseUrl+'write_Heating_Config',JSON.stringify(config),this.httpOptions)
   }
 
   getHeatingConfig(){
