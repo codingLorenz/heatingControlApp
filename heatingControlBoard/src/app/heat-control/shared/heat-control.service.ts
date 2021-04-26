@@ -12,7 +12,6 @@ import { Sensor } from './sensor.model';
   providedIn: 'root',
 })
 export class HeatControlService {
-  
   baseUrl = environment.apiEndpoint;
   httpOptions = {
     headers: new HttpHeaders({
@@ -23,37 +22,56 @@ export class HeatControlService {
 
   constructor(private http: HttpClient) {}
 
-writeHeatingConfig(config:HeatingConfig) {
-   return this.http.post(this.baseUrl+'write_Heating_Config',JSON.stringify(config),this.httpOptions)
+  writeHeatingConfig(config: HeatingConfig) {
+    return this.http.post(
+      this.baseUrl + 'write_Heating_Config',
+      JSON.stringify(config),
+      this.httpOptions
+    );
   }
 
-  getHeatingConfig(){
-    return this.http.get(this.baseUrl+'get_Heating_Config')
+  getHeatingConfig() {
+    return this.http.get(this.baseUrl + 'get_Heating_Config');
   }
 
   get_Sensor_Data(_id: ObjectId) {
-    
-    return this.http.get(this.baseUrl + 'get_Sensor_Data/' + _id.$oid)
+    return this.http.get(this.baseUrl + 'get_Sensor_Data/' + _id.$oid);
   }
 
   getSensors() {
-    return this.http.get(this.baseUrl + 'get_Sensors')
-    .pipe(
-      map(data=> {return data}),
-      catchError(error=>{
-        console.error(error)
-      
-        return of([{temperature:NaN}])
+    return this.http.get(this.baseUrl + 'get_Sensors').pipe(
+      map((data) => {
+        return data;
+      }),
+      catchError((error) => {
+        console.error(error);
+
+        return of([{ temperature: NaN }]);
       })
     );
   }
 
-  getSensorStats(_id:ObjectId){
-    return this.http.get(this.baseUrl+'get_Sensors_Statistics/'+_id.$oid)
+  getSensorStats(_id: ObjectId) {
+    return this.http.get(this.baseUrl + 'get_Sensors_Statistics/' + _id.$oid);
   }
 
-  getSensorStatsInDateRange(daterange:DateRange<Date>){
-    return this.http.post(this.baseUrl+'get_Sensor_Stats_In_Date_Range',JSON.stringify({start:daterange.start,end:daterange.end}),this.httpOptions)
+  getSensorStatsInDateRange(daterange: DateRange<Date>) {
+    return this.http
+      .post(
+        this.baseUrl + 'get_Sensor_Stats_In_Date_Range',
+        JSON.stringify({ start: daterange.start, end: daterange.end }),
+        this.httpOptions
+      )
+      .pipe(
+        map((sensors_stats: any[]) => {
+          sensors_stats.forEach((sensorStatsItem) => {
+            sensorStatsItem['series'].map(
+              (dataItem) => (dataItem.name = new Date(dataItem.name))
+            );
+          });
+          return sensors_stats;
+        })
+      );
   }
   // updateSensor(sensor: Sensor) {
   //   return this.http.post<Sensor>(
@@ -68,10 +86,14 @@ writeHeatingConfig(config:HeatingConfig) {
   }
 
   getRelays() {
-    return this.http.get(this.baseUrl+'get_Relays')
+    return this.http.get(this.baseUrl + 'get_Relays');
   }
 
-  register_User(){
-    return this.http.post(`${this.baseUrl}register`,{id:3,username:'hellowMan',password:'byeBye!'})
+  register_User() {
+    return this.http.post(`${this.baseUrl}register`, {
+      id: 3,
+      username: 'hellowMan',
+      password: 'byeBye!',
+    });
   }
 }

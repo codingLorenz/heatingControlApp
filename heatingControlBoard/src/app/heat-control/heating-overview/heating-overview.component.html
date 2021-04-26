@@ -1,98 +1,5 @@
-<div id="chartWrapper">
-  <mat-chip-list selectable=true >
-    <mat-chip (change)="statsDateRangeClicked(dateParam)"  *ngFor="let dateParam of this.dateRangeOptions" [value]="dateParam">{{dateParam}}</mat-chip>
-  </mat-chip-list>
-  <mat-form-field id="dateRangePickerFormField">
-    <mat-date-range-input
-      [formGroup]="this.dateRange"
-      [rangePicker]="statsRangePicker"
-    >
-      <input
-        matStartDate
-        formControlName="start"
-        (dateChange)="statsDateRangeChanged($event)"
-      />
-      <input
-        matEndDate
-        formControlName="end"
-        (dateChange)="statsDateRangeChanged($event)"
-      />
-    </mat-date-range-input>
-    <mat-datepicker-toggle
-      matSuffix
-      [for]="statsRangePicker"
-    ></mat-datepicker-toggle>
-    <mat-date-range-picker #statsRangePicker> </mat-date-range-picker>
-  </mat-form-field>
-   <ngx-charts-line-chart
-    id="statsGraph"
-    *ngIf="view_sensor_stats"
-    [results]="this.view_sensor_stats"
-    [autoScale]="true"
-    [xAxis]="true"
-    [legend]="true"
-    [legendPosition]="'right'"
-    [timeline]="true"
-    [showGridLines]="true"
-    [showXAxisLabel]="true"
-    [showYAxisLabel]="true"
-    [xAxisTickFormatting]="this.dateTickFormatting"
-    [yAxis]="true"
-    [activeEntries]="this.view_sensor_stats"
-    xAxisLabel="Zeit"
-    yAxisLabel="Temperatur"
-  ></ngx-charts-line-chart>
-  <div *ngIf="!this.view_sensor_stats">
-    <h4><p>Graph wird geladen...</p></h4>
-  </div>
-</div>
-<div class="config-wrapper">
-  <button
-    id="editTimeControlIcon"
-    mat-button
-    (click)="this.switchConfigEditing()"
-  >
-    <mat-icon>edit</mat-icon>
-  </button>
-  <form
-    aria-disabled="true"
-    [formGroup]="heatingConfigFormGroup"
-    (ngSubmit)="submitHeatingConfigChanges()"
-    method="post"
-    id="TimeControlForm"
-  >
-    <mat-form-field>
-      <mat-label>Regelintervall</mat-label>
-      <input
-        matNativeControl
-        matInput
-        type="number"
-        formControlName="REGULATION_INTERVALL_SECONDS"
-      />
-      <span matSuffix>Sekunde(n)</span>
-    </mat-form-field>
-    <mat-form-field>
-      <mat-label>Regeldauer</mat-label>
-      <input
-        matInput
-        type="number"
-        formControlName="REGULATION_DURATION_SECONDS"
-      />
-    </mat-form-field>
-    <mat-form-field>
-      <mat-label>Temperaturtoleranz</mat-label>
-      <input
-        matInput
-        type="number"
-        formControlName="REGULATION_TEMPERATURE_TOLERANCE"
-      />
-    </mat-form-field>
-    <button color="primary" [disabled]="this.heatingConfigFormGroup.disabled" mat-raised-button type="submit">Speichern</button>
-    <mat-error *ngIf="this.heatingConfigForm_httpError">{{
-      this.heatingConfigForm_httpError.message
-    }}</mat-error>
-  </form>
-</div>
+
+
 <div class="monitor-board">
   <div class="monitor-unit">
     <div *ngFor="let currSensor of sensors">
@@ -121,5 +28,113 @@
         [relay]="currRelay"
       ></app-relay>
     </div>
+  </div>
+  <div class="config-wrapper">
+    <button
+      id="editTimeControlIcon"
+      mat-button
+      (click)="this.switchConfigEditing()"
+    >
+      <mat-icon>edit</mat-icon>
+    </button>
+    <form
+      aria-disabled="true"
+      [formGroup]="heatingConfigFormGroup"
+      (ngSubmit)="submitHeatingConfigChanges()"
+      method="post"
+      id="TimeControlForm"
+    >
+      <mat-form-field>
+        <mat-label>Regelintervall in Sekunden</mat-label>
+        <input
+          matNativeControl
+          matInput
+          type="number"
+          formControlName="REGULATION_INTERVALL_SECONDS"
+        />
+        <span matSuffix></span>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Regeldauer in Sekunden</mat-label>
+        <input
+          matInput
+          type="number"
+          formControlName="REGULATION_DURATION_SECONDS"
+        />
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Temperaturtoleranz in Grad</mat-label>
+        <input
+          matInput
+          type="number"
+          formControlName="REGULATION_TEMPERATURE_TOLERANCE"
+        />
+      </mat-form-field>
+      <button
+        color="primary"
+        [disabled]="this.heatingConfigFormGroup.disabled"
+        mat-raised-button
+        type="submit"
+      >
+        Speichern
+      </button>
+      <mat-error *ngIf="this.heatingConfigForm_httpError">{{
+        this.heatingConfigForm_httpError.message
+      }}</mat-error>
+    </form>
+  </div>
+</div>
+<div id="chartWrapper">
+  <mat-chip-list selectable="true">
+    <mat-chip
+      (click)="chipStatsDateRangeClicked(dateParam.time)"
+      [selected]="dateParam.selected"
+      *ngFor="let dateParam of this.dateRangeOptions"
+      [value]="dateParam.time"
+      >{{ dateParam.time }}</mat-chip
+    >
+  </mat-chip-list>
+  <mat-form-field id="dateRangePickerFormField">
+    <mat-date-range-input
+      [formGroup]="this.dateRangeFormGroup"
+      [rangePicker]="statsRangePicker"
+    >
+      <input
+        matStartDate
+        formControlName="start"
+        (dateChange)="statsDateRangeChanged($event)"
+      />
+      <input
+        matEndDate
+        formControlName="end"
+        (dateChange)="statsDateRangeChanged($event)"
+      />
+    </mat-date-range-input>
+    <mat-datepicker-toggle
+      matSuffix
+      [for]="statsRangePicker"
+    ></mat-datepicker-toggle>
+    <mat-date-range-picker #statsRangePicker> </mat-date-range-picker>
+  </mat-form-field>
+  <ngx-charts-line-chart
+    id="statsGraph"
+    *ngIf="view_sensor_stats"
+    [results]="this.view_sensor_stats"
+    [autoScale]="true"
+    [xAxis]="true"
+    [legend]="true"
+    [legendPosition]="'right'"
+    [timeline]="true"
+    [showGridLines]="true"
+    [showXAxisLabel]="true"
+    [showYAxisLabel]="true"
+    [xAxisTickFormatting]="this.dateTickFormatting"
+    [yAxis]="true"
+    [activeEntries]="this.view_sensor_stats"
+    xAxisLabel="Zeit"
+    yAxisLabel="Temperatur"
+  ></ngx-charts-line-chart>
+  <div *ngIf="!this.view_sensor_stats">
+    <h4><p>Graph wird geladen...</p></h4>
   </div>
 </div>

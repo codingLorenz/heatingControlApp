@@ -32,11 +32,10 @@ app-relay,
 }
 
 .config-wrapper{
-  width: 50%;
+  // max-width: 20%;
   background-color: white;
   justify-content: center;
-  display: block;
-  flex-grow: 2;
+  margin:1rem;
 }
 .config-wraper > mat-form-field >input{
   width:min-content;
