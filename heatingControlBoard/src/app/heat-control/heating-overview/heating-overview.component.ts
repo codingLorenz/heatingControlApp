@@ -11,6 +11,7 @@ import { HeatingConfig } from '../shared/heatingConfig.model';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MatButton } from '@angular/material/button';
 import { element } from 'protractor';
+import { Observable, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-heating-overview',
@@ -20,10 +21,8 @@ import { element } from 'protractor';
 export class HeatingOverviewComponent implements OnInit {
   sensors: Sensor[];
   relays: Relay[];
-  // dimensions: [number, number] = [500, 500];
-  all_sensor_stats: any[] = null;
-  view_sensor_stats: any[] = null;
-  active_sensor_data: any[] = null;
+  viewSensorStats: any[] = null;
+  currentStatsPollSubscription: Subscription;
   dateRangeOptions = [
     { time: 'Heute', selected: true },
     { time: 'Woche', selected: false },
@@ -96,16 +95,21 @@ export class HeatingOverviewComponent implements OnInit {
   }
 
   statsDateRangeChanged(event?: MatDatepickerInputEvent<Date>) {
-    
-    if(this.dateRangeFormGroup.value['start']===null || this.dateRangeFormGroup.value['end']===null || (this.dateRangeFormGroup.value['end'] < this.dateRangeFormGroup.value['start'])) return;
-    this.heatControlService
+    if (
+      this.dateRangeFormGroup.value['start'] === null ||
+      this.dateRangeFormGroup.value['end'] === null ||
+      this.dateRangeFormGroup.value['end'] <
+        this.dateRangeFormGroup.value['start']
+    )
+      return;
+    if (this.currentStatsPollSubscription)
+      this.currentStatsPollSubscription.unsubscribe();
+    this.currentStatsPollSubscription = this.heatControlService
       .getSensorStatsInDateRangeOrById(
-        new DateRange(
-          this.dateRangeFormGroup.value['start'],
-          this.dateRangeFormGroup.value['end']
-        )
+        this.dateRangeFormGroup.value['start'],
+        this.dateRangeFormGroup.value['end']
       )
-      .subscribe((sensor_stats) => (this.view_sensor_stats = sensor_stats));
+      .subscribe((sensor_stats) => (this.viewSensorStats = sensor_stats));
   }
 
   toggleChipSelection(index: number) {
@@ -169,11 +173,12 @@ export class HeatingOverviewComponent implements OnInit {
       start: startPointDateRange,
       end: endPointDateRange,
     });
-    this.heatControlService
-      .getSensorStatsInDateRangeOrById(
-        new DateRange(startPointDateRange, endPointDateRange)
-      )
-      .subscribe((sensor_stats) => (this.view_sensor_stats = sensor_stats));
+
+    if (this.currentStatsPollSubscription)
+      this.currentStatsPollSubscription.unsubscribe();
+    this.currentStatsPollSubscription = this.heatControlService
+      .getSensorStatsInDateRangeOrById(startPointDateRange, endPointDateRange)
+      .subscribe((sensor_stats) => (this.viewSensorStats = sensor_stats));
   }
 
   submitHeatingConfigChanges() {

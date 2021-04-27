@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { DateRange } from '@angular/material/datepicker';
 import { Observable } from 'rxjs';
 import { of } from 'rxjs/internal/observable/of';
-import { catchError, map } from 'rxjs/operators';
+import { catchError, map, takeLast } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { HeatingConfig } from './heatingConfig.model';
 import { ObjectId } from './objectid.model';
@@ -55,11 +55,11 @@ export class HeatControlService {
   }
 
 
-  getSensorStatsInDateRangeOrById(daterange: DateRange<Date>) {
+  getSensorStatsInDateRangeOrById(startDate:Date,endDate:Date) {
     return this.http
       .post(
         this.baseUrl + 'get_Sensor_Stats_In_Date_Range',
-        JSON.stringify({ start: daterange.start, end: daterange.end }),
+        JSON.stringify({ start: startDate, end:endDate }),
         this.httpOptions
       )
       .pipe(

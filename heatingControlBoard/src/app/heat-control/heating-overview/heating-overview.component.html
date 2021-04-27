@@ -100,8 +100,8 @@
         [disabled]="!getChipByText('Benutzerdefiniert').selected"
         (dateChange)="statsDateRangeChanged()"
       >
-        <input matStartDate formControlName="start" />
-        <input matEndDate formControlName="end" />
+        <input matStartDate formControlName="start"/>
+        <input matEndDate formControlName="end"/>
       </mat-date-range-input>
       <mat-datepicker-toggle
         matSuffix
@@ -113,8 +113,8 @@
 
   <ngx-charts-line-chart
     id="statsGraph"
-    *ngIf="view_sensor_stats"
-    [results]="this.view_sensor_stats"
+    *ngIf="viewSensorStats"
+    [results]="this.viewSensorStats"
     [autoScale]="true"
     [xAxis]="true"
     [legend]="true"
@@ -125,7 +125,7 @@
     [showYAxisLabel]="false"
     [xAxisTickFormatting]="this.dateTickFormatting"
     [yAxis]="true"
-    [activeEntries]="this.view_sensor_stats"
+    [activeEntries]="this.viewSensorStats"
     xAxisLabel="Zeit"
     yAxisLabel="Temperatur"
   ></ngx-charts-line-chart>
