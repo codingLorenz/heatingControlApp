@@ -42,25 +42,19 @@ app-relay,
   background-color: red;
 }
 
-
-.background-cold{   
-  background-color: white;//mat-color($cold);
-}
-
-.background-warm{
-  background-color: white;//($warm,darker)
-}
-
 #statsGraph{
   display: flex;
   justify-content: center;
-  width: 100%;
-  padding: 2rem;
+  // width: 100%;
+  // padding: 2rem;
   min-height: 10%;
+  background-color: mat-color($accent,50);
 }
 
-#dateRangePickerFormField{
-  
+#dateRangeWrapper{
+  padding: 2rem;
+  padding-left: 3rem;
+  padding-bottom: 0;
 }
 
 #TimeControlForm{
@@ -90,6 +84,7 @@ app-relay,
   width: 100%;
   height: 20rem;
   margin-bottom: 10rem;
+  background-color: mat-color($accent,50);
 }
 
 

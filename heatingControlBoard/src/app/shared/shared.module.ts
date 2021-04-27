@@ -20,7 +20,7 @@ import {MatChipsModule} from '@angular/material/chips';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
-
+import {MatProgressBarModule} from '@angular/material/progress-bar';
 
 @NgModule({
   declarations: [FilterPipe],
@@ -42,7 +42,8 @@ import { MatNativeDateModule } from '@angular/material/core';
     ReactiveFormsModule,
     MatDialogModule,
     MatDatepickerModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    MatProgressBarModule
   ],
 
   exports: [
@@ -64,7 +65,8 @@ import { MatNativeDateModule } from '@angular/material/core';
     FilterPipe,
     MatDatepickerModule,
     MatButtonToggleModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    MatProgressBarModule
   ],
 })
 export class SharedModule {

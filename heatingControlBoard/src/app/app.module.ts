@@ -8,6 +8,7 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './core/http-interceptors/token.interceptor';
 import { HeatControlModule } from './heat-control/heat-control.module';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
+import { LoadingDataInterceptor } from './core/http-interceptors/loading-data-interceptor';
 
 @NgModule({
   declarations: [AppComponent],
@@ -16,9 +17,17 @@ import { MAT_DATE_LOCALE } from '@angular/material/core';
     AppRoutingModule,
     CoreModule,
     HeatControlModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
   ],
-  providers: [{ provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },  {provide: MAT_DATE_LOCALE, useValue: 'de-AT'},],
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: LoadingDataInterceptor,
+      multi: true,
+    },
+    { provide: MAT_DATE_LOCALE, useValue: 'de-AT' },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

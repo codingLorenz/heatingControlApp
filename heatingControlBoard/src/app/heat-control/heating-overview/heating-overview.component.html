@@ -1,5 +1,3 @@
-
-
 <div class="monitor-board">
   <div class="monitor-unit">
     <div *ngFor="let currSensor of sensors">
@@ -85,37 +83,34 @@
   </div>
 </div>
 <div id="chartWrapper">
-  <mat-chip-list selectable="true">
-    <mat-chip
-      (click)="chipStatsDateRangeClicked(dateParam.time)"
-      [selected]="dateParam.selected"
-      *ngFor="let dateParam of this.dateRangeOptions"
-      [value]="dateParam.time"
-      >{{ dateParam.time }}</mat-chip
-    >
-  </mat-chip-list>
-  <mat-form-field id="dateRangePickerFormField">
-    <mat-date-range-input
-      [formGroup]="this.dateRangeFormGroup"
-      [rangePicker]="statsRangePicker"
-    >
-      <input
-        matStartDate
-        formControlName="start"
-        (dateChange)="statsDateRangeChanged($event)"
-      />
-      <input
-        matEndDate
-        formControlName="end"
-        (dateChange)="statsDateRangeChanged($event)"
-      />
-    </mat-date-range-input>
-    <mat-datepicker-toggle
-      matSuffix
-      [for]="statsRangePicker"
-    ></mat-datepicker-toggle>
-    <mat-date-range-picker #statsRangePicker> </mat-date-range-picker>
-  </mat-form-field>
+  <div id="dateRangeWrapper">
+    <mat-chip-list selectable="true">
+      <mat-chip
+        (click)="chipStatsDateRangeClicked(dateParam.time)"
+        [selected]="dateParam.selected"
+        *ngFor="let dateParam of this.dateRangeOptions"
+        [value]="dateParam.time"
+        >{{ dateParam.time }}</mat-chip
+      >
+    </mat-chip-list>
+    <mat-form-field id="dateRangePickerFormField">
+      <mat-date-range-input
+        [formGroup]="this.dateRangeFormGroup"
+        [rangePicker]="statsRangePicker"
+        [disabled]="!getChipByText('Benutzerdefiniert').selected"
+        (dateChange)="statsDateRangeChanged()"
+      >
+        <input matStartDate formControlName="start" />
+        <input matEndDate formControlName="end" />
+      </mat-date-range-input>
+      <mat-datepicker-toggle
+        matSuffix
+        [for]="statsRangePicker"
+      ></mat-datepicker-toggle>
+      <mat-date-range-picker #statsRangePicker> </mat-date-range-picker>
+    </mat-form-field>
+  </div>
+
   <ngx-charts-line-chart
     id="statsGraph"
     *ngIf="view_sensor_stats"
@@ -123,18 +118,18 @@
     [autoScale]="true"
     [xAxis]="true"
     [legend]="true"
-    [legendPosition]="'right'"
+    [legendPosition]="'below'"
     [timeline]="true"
     [showGridLines]="true"
-    [showXAxisLabel]="true"
-    [showYAxisLabel]="true"
+    [showXAxisLabel]="false"
+    [showYAxisLabel]="false"
     [xAxisTickFormatting]="this.dateTickFormatting"
     [yAxis]="true"
     [activeEntries]="this.view_sensor_stats"
     xAxisLabel="Zeit"
     yAxisLabel="Temperatur"
   ></ngx-charts-line-chart>
-  <div *ngIf="!this.view_sensor_stats">
-    <h4><p>Graph wird geladen...</p></h4>
+  <div *ngIf="this.heatControlService.loadingStatsData">
+    <mat-progress-bar mode="query"></mat-progress-bar>
   </div>
 </div>

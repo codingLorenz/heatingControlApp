@@ -29,6 +29,7 @@ export class HeatingOverviewComponent implements OnInit {
     { time: 'Woche', selected: false },
     { time: 'Monat', selected: false },
     { time: 'Jahr', selected: false },
+    { time: 'Benutzerdefiniert', selected: false },
   ];
 
   heatingConfigForm_httpError: HttpErrorResponse;
@@ -43,7 +44,7 @@ export class HeatingOverviewComponent implements OnInit {
     end: new FormControl(),
   });
 
-  constructor(private heatControlService: HeatControlService) {
+  constructor(public heatControlService: HeatControlService) {
     this.heatingConfigFormGroup.disable();
   }
 
@@ -74,32 +75,6 @@ export class HeatingOverviewComponent implements OnInit {
     this.heatControlService.getSensors().subscribe(
       (data: Sensor[]) => {
         this.sensors = data;
-
-        this.sensors.forEach((x) => {
-          this.heatControlService
-            .getSensorStats(x._id)
-            .subscribe((sensor_stats) => {
-              if (this.all_sensor_stats === null) this.all_sensor_stats = [];
-              sensor_stats['series'].map(
-                (dataItem: { name: string | number | Date }) => {
-                  dataItem.name = new Date(dataItem.name);
-                }
-              );
-              this.all_sensor_stats.push(sensor_stats);
-              this.view_sensor_stats = [
-                ...this.all_sensor_stats.filter((x) => x == x),
-              ];
-              console.log(sensor_stats);
-              console.log('alle:');
-              console.log(this.all_sensor_stats);
-            });
-        });
-
-        // this.sensors.forEach(x=>{
-        //   this.heatControlService.getSensorStats(x._id)
-        //   .subscribe(stats=>{this.all_sensors_stats$
-        //     .subscribe(stats=>{this.all_sensor_stats.push(stats)}
-        //   }
       },
       (error) => {
         return (this.sensors = null);
@@ -120,22 +95,85 @@ export class HeatingOverviewComponent implements OnInit {
     }
   }
 
-  statsDateRangeChanged(event: MatDatepickerInputEvent<Date>) {
-    if (
-      this.dateRangeFormGroup.value['start'] &&
-      this.dateRangeFormGroup.value['end']
-    ) {
-      this.heatControlService
-        .getSensorStatsInDateRange(
-          new DateRange(
-            this.dateRangeFormGroup.value['start'],
-            this.dateRangeFormGroup.value['end']
-          )
+  statsDateRangeChanged(event?: MatDatepickerInputEvent<Date>) {
+    
+    if(this.dateRangeFormGroup.value['start']===null || this.dateRangeFormGroup.value['end']===null || (this.dateRangeFormGroup.value['end'] < this.dateRangeFormGroup.value['start'])) return;
+    this.heatControlService
+      .getSensorStatsInDateRangeOrById(
+        new DateRange(
+          this.dateRangeFormGroup.value['start'],
+          this.dateRangeFormGroup.value['end']
         )
-        .subscribe((sensors_stats: any[]) => {
-          this.view_sensor_stats = sensors_stats;
-        });
+      )
+      .subscribe((sensor_stats) => (this.view_sensor_stats = sensor_stats));
+  }
+
+  toggleChipSelection(index: number) {
+    this.dateRangeOptions.forEach((element) => (element.selected = false)); //removes any selection of chips
+    this.dateRangeOptions[index].selected = true;
+  }
+
+  getChipByText(timetext: string) {
+    return this.dateRangeOptions.find((elem) => elem.time == timetext);
+  }
+
+  chipStatsDateRangeClicked(dateRangeOption: string) {
+    let endPointDateRange = new Date();
+    let startPointDateRange = new Date();
+    startPointDateRange.setUTCHours(0, 0, 0, 0); //0 hours,minutes,seconds,miliseconds
+    switch (dateRangeOption) {
+      case 'Heute':
+        this.toggleChipSelection(
+          this.dateRangeOptions.findIndex((element) => element.time == 'Heute')
+        );
+        break;
+      case 'Woche':
+        startPointDateRange.setUTCDate(
+          endPointDateRange.getUTCDate() - endPointDateRange.getUTCDay()
+        ); //substracts the days passed in the current week
+        this.toggleChipSelection(
+          this.dateRangeOptions.findIndex((element) => element.time == 'Woche')
+        );
+        break;
+      case 'Monat':
+        startPointDateRange.setUTCDate(
+          endPointDateRange.getUTCDate() - endPointDateRange.getUTCDate() + 1 //so that it's first day not day zero
+        ); //sets to first of the current month
+        this.toggleChipSelection(
+          this.dateRangeOptions.findIndex((element) => element.time == 'Monat')
+        );
+        break;
+      case 'Jahr':
+        startPointDateRange.setUTCFullYear(
+          endPointDateRange.getUTCFullYear(),
+          1,
+          1
+        ); //sets startPointDateRange to first day of first month (January), current year
+        this.toggleChipSelection(
+          this.dateRangeOptions.findIndex((element) => element.time == 'Jahr')
+        );
+        break;
+      case 'Benutzerdefiniert':
+        this.toggleChipSelection(
+          this.dateRangeOptions.findIndex(
+            (element) => element.time == 'Benutzerdefiniert'
+          )
+        );
+        return;
+
+      default:
+        // startPointDateRange = endPointDateRange;
+        break;
     }
+    this.dateRangeFormGroup.setValue({
+      start: startPointDateRange,
+      end: endPointDateRange,
+    });
+    this.heatControlService
+      .getSensorStatsInDateRangeOrById(
+        new DateRange(startPointDateRange, endPointDateRange)
+      )
+      .subscribe((sensor_stats) => (this.view_sensor_stats = sensor_stats));
   }
 
   submitHeatingConfigChanges() {
@@ -162,59 +200,5 @@ export class HeatingOverviewComponent implements OnInit {
     this.heatingConfigFormGroup.disabled
       ? this.heatingConfigFormGroup.enable()
       : this.heatingConfigFormGroup.disable();
-  }
-
-  chipStatsDateRangeClicked(dateRangeOption: string) {
-    const endPointDateRange = new Date();
-    let startPointDateRange = new Date();
-    this.dateRangeOptions.forEach((element) => (element.selected = false)); //removes any selection of chips
-
-    switch (dateRangeOption) {
-      case 'Heute':
-        startPointDateRange.setUTCHours(0, 0, 0, 0); //0hours,minutes,seconds,miliseconds
-        this.dateRangeOptions.find(
-          (element) => element.time == 'Heute'
-        ).selected = true;
-        break;
-      case 'Woche':
-        startPointDateRange.setUTCDate(
-          endPointDateRange.getUTCDate() - endPointDateRange.getUTCDay()
-        ); //substracts the days passed in the current week
-        this.dateRangeOptions.find(
-          (element) => element.time == 'Woche'
-        ).selected = true;
-        break;
-      case 'Monat':
-        startPointDateRange.setUTCDate(
-          endPointDateRange.getUTCDate() - endPointDateRange.getUTCDate()
-        ); //sets to first of the current month
-        this.dateRangeOptions.find(
-          (element) => element.time == 'Monat'
-        ).selected = true;
-        break;
-      case 'Jahr':
-        startPointDateRange.setUTCFullYear(
-          endPointDateRange.getUTCFullYear(),
-          1,
-          1
-        ); //sets startPointDateRange to first day of first month (January), current year
-        this.dateRangeOptions.find(
-          (element) => element.time == 'Jahr'
-        ).selected = true;
-        break;
-
-      default:
-        startPointDateRange = endPointDateRange;
-        break;
-    }
-    this.dateRangeFormGroup.setValue({
-      start: startPointDateRange,
-      end: endPointDateRange,
-    });
-    this.heatControlService
-      .getSensorStatsInDateRange(
-        new DateRange(startPointDateRange, endPointDateRange)
-      )
-      .subscribe((sensor_stats) => (this.view_sensor_stats = sensor_stats));
   }
 }

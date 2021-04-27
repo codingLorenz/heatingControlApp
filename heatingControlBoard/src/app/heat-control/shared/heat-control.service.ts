@@ -1,6 +1,7 @@
 import { HttpHeaders, HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { DateRange } from '@angular/material/datepicker';
+import { Observable } from 'rxjs';
 import { of } from 'rxjs/internal/observable/of';
 import { catchError, map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
@@ -19,6 +20,8 @@ export class HeatControlService {
       'Access-Control-Allow-Origin': '*',
     }),
   };
+
+  loadingStatsData: boolean;
 
   constructor(private http: HttpClient) {}
 
@@ -51,11 +54,8 @@ export class HeatControlService {
     );
   }
 
-  getSensorStats(_id: ObjectId) {
-    return this.http.get(this.baseUrl + 'get_Sensors_Statistics/' + _id.$oid);
-  }
 
-  getSensorStatsInDateRange(daterange: DateRange<Date>) {
+  getSensorStatsInDateRangeOrById(daterange: DateRange<Date>) {
     return this.http
       .post(
         this.baseUrl + 'get_Sensor_Stats_In_Date_Range',
