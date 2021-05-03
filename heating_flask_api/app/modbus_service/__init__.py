@@ -24,4 +24,4 @@ try:
 	heatingConfig = HeatingControlConfig.objects().first()	
 except (SerialException,FileNotFoundError) as e:
 	logging.error('Check connectivity between server and sensor devices')
-	# raise SystemExit
+	raise SystemExit

@@ -18,24 +18,27 @@ connect('heatControlDB')
 app.config['SECRET_KEY']='Th1s1ss3cr3t'
 CORS(app)
 
-from app.modbus_service.models import Sensor,Relay,User,MeasurementValue
+from app.modbus_service.models import HeatingControlConfig, MeasurementValue, Relay, Sensor, User
 
 def init_db():
-    # Sensor.drop_collection()
+    Sensor.drop_collection()
     Relay.drop_collection()
     User.drop_collection()
-    # MeasurementValue.drop_collection()
+    MeasurementValue.drop_collection()
     sensor1 = Sensor(temperature=10,tolerance=0.5,name='Außentemperatur',registerAddress=0)
     sensor2 = Sensor(temperature=22,tolerance=0.5,name='Vorlauftemperatur',registerAddress=1,idealTemperature=20)
     relay1 = Relay(heating=False,name='Heizung +',registerAddress=16)
     relay2 = Relay(heating=False,name='Heizung -',registerAddress=17)
-    # sensor1.save()
-    # sensor2.save()
+    sensor1.save()
+    sensor2.save()
     relay1.save()
     relay2.save()
     user = User(username='andreas',password='heizung')
     user.password = User.hash_password(user.password)
     user.save()
+    initialHeatingConfig = HeatingControlConfig(REGULATION_DURATION_SECONDS=60,REGULATION_INTERVALL_SECONDS=3,REGULATION_TEMPERATURE_TOLERANCE=3)
+    initialHeatingConfig.save()
+
     
 
 init_db() 
