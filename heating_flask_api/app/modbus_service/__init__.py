@@ -1,5 +1,5 @@
 
-
+import platform
 import minimalmodbus
 from app.modbus_service.models import HeatingControlConfig
 from serial.serialutil import SerialException
@@ -9,10 +9,12 @@ import logging
 
 adamSensorModule = None
 adamRelayModule = None
-port = 'COM1'#'COM3' #/dev/ttyUSB0 for linux
+port = '/dev/ttyUSB0' #'COM3' #/dev/ttyUSB0 for linux
 heatingConfig:HeatingControlConfig = None
 
 try:
+	if 'Windows' in platform.system():
+		port = "COM3" 
 	adamSensorModule = minimalmodbus.Instrument(port,1) 
 	adamSensorModule.close_port_after_each_call = False
 	adamSensorModule.serial.baudrate = 9600	
