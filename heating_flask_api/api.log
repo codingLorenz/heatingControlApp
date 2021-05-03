@@ -1,1 +1,21 @@
-2021-05-03 11:32:48,683 ERROR root Check connectivity between server and sensor devices
+2021-05-03 17:24:22,438 ERROR root Check connectivity between server and sensor devices
+2021-05-03 17:24:22,653 ERROR root 'NoneType' object has no attribute 'read_register'
+Traceback (most recent call last):
+  File "C:\Users\lorenzk\Desktop\coding\modTempControl\heatingControlApp\heating_flask_api\app\modbus_service\service.py", line 21, in getSensorValue
+    temperature = adamSensorModule.read_register(sensor.registerAddress,3) #3 digits after comma
+AttributeError: 'NoneType' object has no attribute 'read_register'
+2021-05-03 17:24:22,658 ERROR root 'NoneType' object has no attribute 'read_register'
+Traceback (most recent call last):
+  File "C:\Users\lorenzk\Desktop\coding\modTempControl\heatingControlApp\heating_flask_api\app\modbus_service\service.py", line 21, in getSensorValue
+    temperature = adamSensorModule.read_register(sensor.registerAddress,3) #3 digits after comma
+AttributeError: 'NoneType' object has no attribute 'read_register'
+2021-05-03 17:24:22,698 ERROR root 'NoneType' object has no attribute 'write_bit'
+Traceback (most recent call last):
+  File "C:\Users\lorenzk\Desktop\coding\modTempControl\heatingControlApp\heating_flask_api\app\modbus_service\service.py", line 31, in applyDBValuesToRelays
+    adamRelayModule.write_bit(relay.registerAddress,relay.heating)
+AttributeError: 'NoneType' object has no attribute 'write_bit'
+2021-05-03 17:24:22,699 ERROR root 'NoneType' object has no attribute 'write_bit'
+Traceback (most recent call last):
+  File "C:\Users\lorenzk\Desktop\coding\modTempControl\heatingControlApp\heating_flask_api\app\modbus_service\service.py", line 31, in applyDBValuesToRelays
+    adamRelayModule.write_bit(relay.registerAddress,relay.heating)
+AttributeError: 'NoneType' object has no attribute 'write_bit'

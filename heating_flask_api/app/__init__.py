@@ -25,6 +25,7 @@ def init_db():
     Relay.drop_collection()
     User.drop_collection()
     MeasurementValue.drop_collection()
+    HeatingControlConfig.drop_collection()
     sensor1 = Sensor(temperature=10,tolerance=0.5,name='Außentemperatur',registerAddress=0)
     sensor2 = Sensor(temperature=22,tolerance=0.5,name='Vorlauftemperatur',registerAddress=1,idealTemperature=20)
     relay1 = Relay(heating=False,name='Heizung +',registerAddress=16)
