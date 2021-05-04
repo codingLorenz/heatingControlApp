@@ -5,7 +5,7 @@ import logging
 from flask.templating import render_template
 from mongoengine import connect
 
-logging.basicConfig(filename='api.log', encoding='utf-8',filemode='w', level=logging.ERROR, format='%(asctime)s %(levelname)s %(name)s %(message)s')
+logging.basicConfig(filename='api.log', encoding='utf-8',filemode='w', level=logging.WARNING, format='%(asctime)s %(levelname)s %(name)s %(message)s')
 
 app = Flask(__name__)
 app.logger.disabled = True
@@ -57,4 +57,4 @@ def prepareTestMVs():
         mv1.save()
         mv2.save()
         startDateTime = startDateTime+timedelta(minutes=10)
-prepareTestMVs()
+# prepareTestMVs()
