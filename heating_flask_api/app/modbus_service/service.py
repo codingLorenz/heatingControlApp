@@ -20,29 +20,23 @@ def getSensorValue(sensor):
 	try:
 		temperature = adamSensorModule.read_register(sensor.registerAddress,3) #3 digits after comma
 		return temperature
-	except (NoResponseError,SerialException,Exception) as e:
+	except (NoResponseError,SerialException,BaseException) as e:
 		logging.exception(e)
 	return sensor.temperature
-	  #Eingänge beginnen bei 0, Id's bei 1
 
 def applyDBValuesToRelays():
 	for relay in Relay.objects:
 		try:
 			adamRelayModule.write_bit(relay.registerAddress,relay.heating)
-		except (NoResponseError,Exception) as e:
+		except (NoResponseError,BaseException) as e:
 			logging.exception(e)
 
 def updateSensorTemperatureInDB():
 	threading.Timer(heatingConfig.REGULATION_DURATION_SECONDS, updateSensorTemperatureInDB).start()
 	for sensor in Sensor.objects:
 		sensor_temperature = getSensorValue(sensor)
-		
-		#Uncomment in production
 		sensor.update(temperature = sensor_temperature)
 		sensor.save()
-		# if sensor.name not in 'Außentemperatur':
-		# 	sensor.update(temperature = getSensorValue(sensor))#randint(20,40) #getSensorValue(sensor.id)
-		# 	sensor.save()
 
 def saveSensorTemperatureToStat():
 	threading.Timer(10*60,saveSensorTemperatureToStat).start() #every 10 minutes
@@ -52,7 +46,7 @@ def saveSensorTemperatureToStat():
 
 def regulatePreheaterTemperature():	
 	threading.Timer(heatingConfig.REGULATION_INTERVALL_SECONDS+heatingConfig.REGULATION_DURATION_SECONDS, regulatePreheaterTemperature).start()
-	print("new Regulation Thread started"+str(heatingConfig.REGULATION_INTERVALL_SECONDS)+' '+str(heatingConfig.REGULATION_DURATION_SECONDS))
+	logging.info("Regulating [REGULATION_INTERVALL_SECONDS/REGULATION_DURATION_SECONDS]"+str(heatingConfig.REGULATION_INTERVALL_SECONDS)+'/'+str(heatingConfig.REGULATION_DURATION_SECONDS))
 	preheaterSensor = Sensor.objects.get(name='Vorlauftemperatur')
 	outsideSensor = Sensor.objects.get(name='Außentemperatur')
 	preheaterSensor.idealTemperature = -0.4*(outsideSensor.temperature) + 32

@@ -8,7 +8,6 @@ from mongoengine import connect
 logging.basicConfig(filename='api.log', encoding='utf-8',filemode='w', level=logging.WARNING, format='%(asctime)s %(levelname)s %(name)s %(message)s')
 
 app = Flask(__name__)
-app.logger.disabled = True
 
 app.config['MONGODB_SETTINGS'] = {
     "db": "heatControlDB",
