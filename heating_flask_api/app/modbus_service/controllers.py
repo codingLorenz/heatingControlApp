@@ -133,7 +133,7 @@ def write_Heating_Config():
 		heatingConfig.REGULATION_DURATION_SECONDS=newHeatingConfig.REGULATION_DURATION_SECONDS
 		heatingConfig.REGULATION_INTERVALL_SECONDS=newHeatingConfig.REGULATION_INTERVALL_SECONDS
 		heatingConfig.REGULATION_TEMPERATURE_TOLERANCE=newHeatingConfig.REGULATION_TEMPERATURE_TOLERANCE
-		heatingConfig.save()
+		response = heatingConfig.save()
 		return make_response(jsonify('OK'),200)
 	except BaseException as bE:
 		logging.error(bE)

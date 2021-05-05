@@ -10,7 +10,6 @@ from bson.objectid import ObjectId
 import logging
 from datetime import datetime
 from random import randint
-from flask_sqlalchemy import SQLAlchemy
 
 
 

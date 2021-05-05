@@ -18,7 +18,7 @@
     <div *ngFor="let currRelay of relays; index as i">
       <app-relay
         [ngClass]="
-          this.currRelay.name.includes('Heizung +')
+          this.currRelay?.name.includes('Heizung +')
             ? 'background-warm'
             : 'background-cold'
         "

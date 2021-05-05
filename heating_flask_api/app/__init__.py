@@ -1,4 +1,3 @@
-from flask_sqlalchemy import SQLAlchemy
 from flask.app import Flask
 from flask_cors import CORS
 import logging
